@@ -208,6 +208,19 @@ def logout():
     return redirect("/")
 
 
+@app.route("/profile")
+@login_required
+def profile():
+    """Profile page"""
+
+    # User reached route via POST method
+    if request.method == "POST":
+        return apology("not implemented", 404)
+
+    # User reached route via Get method
+    else:
+        user = db.execute("SELECT username FROM users WHERE id = ?", session["user_id"])
+        return render_template("profile.html", user=user)
 # @app.route("/quote", methods=["GET", "POST"])
 # @login_required
 # def quote():
