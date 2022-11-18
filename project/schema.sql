@@ -25,5 +25,5 @@ CREATE TABLE entries (
 );
 
 CREATE UNIQUE INDEX username ON users (username);
-CREATE UNIQUE INDEX user_id ON categories (user_id);
-CREATE UNIQUE INDEX user_id ON entries (user_id);
+-- CREATE UNIQUE INDEX user_id_cat ON categories (user_id);
+-- CREATE UNIQUE INDEX user_id_ent ON entries (user_id);

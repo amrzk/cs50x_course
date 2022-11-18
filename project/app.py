@@ -9,7 +9,7 @@ from datetime import datetime
 
 from helpers import apology, login_required, lookup, usd
 
-# comment
+
 # Configure application
 app = Flask(__name__)
 
