@@ -7,7 +7,7 @@ from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 
-from project.helpers import apology, login_required, lookup, usd
+from helpers import apology, login_required, lookup, usd
 
 # comment
 # Configure application
@@ -16,7 +16,6 @@ app = Flask(__name__)
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-# .
 # Custom filter
 app.jinja_env.filters["usd"] = usd
 
@@ -26,16 +25,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-uri = os.getenv("DATABASE_URL")
-if uri.startswith("postgress://"):
-    uri = uri.replace("postgres://", "postgresql://")
-db = SQL(uri)
-# db = SQL("sqlite:///finance.db")
-
-# Make sure API key is set
-if not os.environ.get("API_KEY"):
-    raise RuntimeError("API_KEY not set")
-
+db = SQL("sqlite:///expenses.db")
 
 @app.after_request
 def after_request(response):
@@ -50,7 +40,7 @@ def after_request(response):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    # retreving user's history
+    # retrieving user's history
     data = db.execute("SELECT symbol, shares FROM purchase WHERE user_id=?", session["user_id"])
 
     # Combining entries for same company
