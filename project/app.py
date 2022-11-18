@@ -7,7 +7,7 @@ from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 
-from helpers import apology, login_required, lookup, usd
+from helpers import apology, login_required, usd
 
 
 # Configure application
@@ -121,6 +121,46 @@ def history():
     return apology("Not Implemented", 404)
 
 
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    """Register user"""
+
+    # User reached route via POST method
+    if request.method == "POST":
+
+        # Ensure username was submitted
+        if not request.form.get("username"):
+            return apology("must provide username", 400)
+
+        # Ensure password was submitted
+        elif not request.form.get("password"):
+            return apology("must provide password", 400)
+
+        # Ensure password and confirmation match
+        elif request.form.get("confirmation") != request.form.get("password"):
+            return apology("password and confirmation doesn't match", 400)
+
+        # Check if username already exists
+        if db.execute("SELECT username FROM users WHERE username=?", request.form.get("username")):
+            return apology("username already exists", 400)
+
+        # Add username and password hash to db
+        user = request.form.get("username")
+        hash = generate_password_hash(request.form.get("password"))
+        db.execute("INSERT INTO users (username,hash) VALUES (?,?)", user, hash)
+
+        # log user in
+        id = db.execute("SELECT id FROM users WHERE username=?", user)
+        session["user_id"] = id[0]["id"]
+
+        # redirects user to home page
+        return redirect("/")
+
+    # User reached route via GET method
+    else:
+        return render_template("/register.html")
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
@@ -128,7 +168,7 @@ def login():
     # Forget any user_id
     session.clear()
 
-    # User reached route via POST (as by submitting a form via POST)
+    # User reached route via POST method
     if request.method == "POST":
 
         # Ensure username was submitted
@@ -152,7 +192,7 @@ def login():
         # Redirect user to home page
         return redirect("/")
 
-    # User reached route via GET (as by clicking a link or via redirect)
+    # User reached route via GET method
     else:
         return render_template("login.html")
 
@@ -166,43 +206,6 @@ def logout():
 
     # Redirect user to login form
     return redirect("/")
-
-
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    """Register user"""
-
-    if request.method == "POST":
-        # check for user/password and insert into db and redirect to
-        # Ensure username was submitted
-        if not request.form.get("username"):
-            return apology("must provide username", 400)
-
-        # Ensure password was submitted
-        elif not request.form.get("password"):
-            return apology("must provide password", 400)
-
-        # Ensure Confirmation was submitted
-        elif request.form.get("confirmation") != request.form.get("password"):
-            return apology("password and confirmation must be identical", 400)
-
-        if db.execute("SELECT username FROM users WHERE username=?", request.form.get("username")):
-            return apology("This username already exists", 400)
-
-        # Add user to db
-        user = request.form.get("username")
-        hash = generate_password_hash(request.form.get("password"))
-        db.execute("INSERT INTO users (username,hash) VALUES (?,?)", user, hash)
-
-        # login
-        id = db.execute("SELECT id FROM users WHERE username=?", user)
-        session["user_id"] = id[0]["id"]
-
-        # redirects user to home page
-        return redirect("/")
-
-    else:
-        return render_template("/register.html")
 
 
 # @app.route("/quote", methods=["GET", "POST"])
