@@ -268,6 +268,37 @@ def security():
         return render_template("security.html")
 
 
+@app.route("/entry", methods=["GET", "POST"])
+@login_required
+def entry():
+    """entry page"""
+
+    # List all the user's categories
+    cat = db.execute("SELECT category FROM categories WHERE user_id=?", session["user_id"])
+    categories = []
+    for i in range(len(cat)):
+        categories.append(cat[i]['category'])
+    sorted_cat = sorted(categories)
+
+    # User reached route via POST method
+    if request.method == "POST":
+        # Ensure user typed a category
+        if not request.form.get("category"):
+            return apology("please add a category", 400)
+
+        # Ensure category doesn't already exist
+        if request.form.get("category") in categories:
+            return apology("category already exists", 400)
+
+        db.execute("INSERT INTO categories (category,user_id) VALUES (?,?)", request.form.get("category"), session["user_id"])
+        return redirect("/entry")
+
+    # User reached route via Get method
+    else:
+        return render_template("entry.html", sorted_cat=sorted_cat)
+
+
+
 # @app.route("/quote", methods=["GET", "POST"])
 # @login_required
 # def quote():
