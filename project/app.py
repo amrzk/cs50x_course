@@ -115,7 +115,6 @@ def buy():
 @login_required
 def history():
     """Show history of transactions"""
-
     # history = db.execute("SELECT symbol, price, shares, date FROM purchase WHERE user_id=?", session["user_id"])
     # return render_template("history.html", history=history)
     return apology("Not Implemented", 404)
@@ -124,7 +123,6 @@ def history():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
-
     # User reached route via POST method
     if request.method == "POST":
 
@@ -164,7 +162,6 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
-
     # Forget any user_id
     session.clear()
 
@@ -200,7 +197,6 @@ def login():
 @app.route("/logout")
 def logout():
     """Log user out"""
-
     # Forget any user_id
     session.clear()
 
@@ -212,7 +208,6 @@ def logout():
 @login_required
 def personal():
     """personal page"""
-
     # List all the user's categories
     cat = db.execute("SELECT category FROM categories WHERE user_id=?", session["user_id"])
     categories = []
@@ -242,7 +237,6 @@ def personal():
 @login_required
 def security():
     """Security page"""
-
     # User reached route via POST method
     if request.method == "POST":
 
@@ -272,7 +266,6 @@ def security():
 @login_required
 def entry():
     """entry page"""
-
     # List all the user's categories
     cat = db.execute("SELECT category FROM categories WHERE user_id=?", session["user_id"])
     categories = []
