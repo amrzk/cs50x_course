@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Security
+{% endblock %}
+
+{% block main %}
+<div class="container-sm px-4 mt-4">
+    <div class="col-xl-6 offset-lg-3">
+        <!-- Change password card-->
+        <div class="card mb-4">
+            <div class="card-header">Change Password</div>
+            <div class="card-body">
+                <form action="/security" method="post">
+                    <!-- Form Group (current password)-->
+                    <div class="mb-3">
+                        <label class="small mb-1" for="currentPassword">Current Password</label>
+                        <input class="form-control" id="currentPassword" name="currentpassword" type="password" placeholder="Enter current password" required>
+                    </div>
+                    <!-- Form Group (new password)-->
+                    <div class="mb-3">
+                        <label class="small mb-1" for="newPassword">New Password</label>
+                        <input class="form-control" id="newPassword" name="newpassword" type="password" placeholder="Enter new password" required>
+                    </div>
+                    <!-- Form Group (confirm password)-->
+                    <div class="mb-3">
+                        <label class="small mb-1" for="confirmPassword">Confirm Password</label>
+                        <input class="form-control" id="confirmPassword" name="confirmpassword" type="password" placeholder="Confirm new password" required>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

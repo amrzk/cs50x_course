@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    New Entry
+{% endblock %}
+
+{% block main %}
+<div class="container-sm px-4 mt-4">
+    <div class="col-xl-6 offset-lg-3">
+        <!-- Add a new transaction Card-->
+        <div class="card mb-4">
+            <div class="card-header">Transaction Details</div>
+            <div class="card-body">
+                <form action="/entry" method="post">
+                    <div class="row">
+                        <div class="col-xl-9">
+                            <!-- Form Group (spent expense)-->
+                            <div class="mb-3">
+                                <label class="small mb-1" for="expense">Expense</label>
+                                <input class="form-control" id="expense" min="0" name="expense" step="any" type="number" placeholder="Enter expense" required>
+                            </div>
+                        </div>
+                        <div class="col-xl-3">
+                            <!-- Form Group (category)-->
+                            <div class="mb-3">
+                                <label class="small mb-1">Categories</label>
+                                <select class="form-select mx-auto w-auto" name="category" required>
+                                    <option value="" disabled selected>Pickles</option>
+                                    {% for category in categories%}
+                                        <option name="{{category}}">{{category.upper()}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Form Group (date)-->
+                    <div class="mb-3">
+                        <label class="small mb-1" for="date" >Date</label>
+                        <input class="form-control" id="date" name="date" type="date" required>
+                    </div>
+                    <!-- Form Group (note)-->
+                    <div class="mb-3">
+                        <label class="small mb-1" for="note">Note</label>
+                        <input class="form-control" id="note" name="note" type="text" placeholder="Add a note">
+                    </div>
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
