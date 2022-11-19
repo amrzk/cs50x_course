@@ -208,34 +208,64 @@ def logout():
     return redirect("/")
 
 
-@app.route("/personal")
+@app.route("/personal", methods=["GET", "POST"])
 @login_required
 def personal():
     """personal page"""
 
+    # List all the user's categories
+    cat = db.execute("SELECT category FROM categories WHERE user_id=?", session["user_id"])
+    categories = []
+    for i in range(len(cat)):
+        categories.append(cat[i]['category'])
+    sorted_cat = sorted(categories)
+
     # User reached route via POST method
     if request.method == "POST":
-        return apology("not implemented", 404)
+        # Ensure user typed a category
+        if not request.form.get("category"):
+            return apology("please add a category", 400)
+
+        # Ensure category doesn't already exist
+        if request.form.get("category") in categories:
+            return apology("category already exists", 400)
+
+        db.execute("INSERT INTO categories (category,user_id) VALUES (?,?)", request.form.get("category"), session["user_id"])
+        return redirect("/personal")
 
     # User reached route via Get method
     else:
-        user = db.execute("SELECT username FROM users WHERE id = ?", session["user_id"])
-        return render_template("personal.html", user=user)
+        return render_template("personal.html", sorted_cat=sorted_cat)
 
 
-@app.route("/security")
+@app.route("/security", methods=["GET", "POST"])
 @login_required
 def security():
     """Security page"""
 
     # User reached route via POST method
     if request.method == "POST":
-        return apology("not implemented", 404)
+
+        # Ensure current password is correct
+        hash = db.execute("SELECT hash FROM users WHERE id=?", session["user_id"])
+        if not check_password_hash(hash[0]["hash"], request.form.get("currentpassword")):
+            return apology("incorrect password", 400)
+
+        # Ensure password was submitted
+        elif not request.form.get("newpassword"):
+            return apology("must provide a new password", 400)
+
+        # Ensure password and confirmation match
+        elif request.form.get("confirmpassword") != request.form.get("newpassword"):
+            return apology("new passwords doesn't match", 400)
+
+        hash = generate_password_hash(request.form.get("newpassword"))
+        db.execute("UPDATE users SET hash=? WHERE id=?", hash, session["user_id"])
+        return redirect("/")
 
     # User reached route via Get method
     else:
-        user = db.execute("SELECT username FROM users WHERE id = ?", session["user_id"])
-        return render_template("security.html", user=user)
+        return render_template("security.html")
 
 
 # @app.route("/quote", methods=["GET", "POST"])
