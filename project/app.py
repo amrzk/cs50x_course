@@ -1,4 +1,5 @@
 import os
+import numpy as np
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -50,7 +51,7 @@ def index():
 def history():
     """Show history of transactions"""
     # Look up the user's entries
-    history = db.execute("SELECT amount, description, date, categories.category FROM entries INNER JOIN categories ON category_id = categories.id WHERE entries.user_id=?", session["user_id"])
+    history = db.execute("SELECT amount, description, year, month, day, categories.category FROM entries INNER JOIN categories ON category_id = categories.id WHERE entries.user_id=?", session["user_id"])
     return render_template("history.html", history=history)
 
 
@@ -220,14 +221,20 @@ def entry():
         if request.form.get("category") not in categories:
             return apology("category doesn't exists", 400)
 
-        # Ensure user input date
+        # Ensure user input a valid date
         if not request.form.get("date"):
             return apology("must add a date", 400)
+        try:
+            date = np.datetime64(request.form.get("date"))
+        except:
+            return apology("invalid date", 400)
 
         # add entry to db
         cat_id = db.execute("SELECT id FROM categories WHERE category = ?", request.form.get("category"))
-        db.execute("INSERT INTO entries (amount,description,date,user_id,category_id) VALUES (?,?,?,?,?)"
-                , request.form.get("expense"), request.form.get("note"), request.form.get("date"), session["user_id"], cat_id[0]["id"])
+        db.execute("INSERT INTO entries (amount,description,year,month,day,user_id,category_id) VALUES (?,?,?,?,?,?,?)"
+                , request.form.get("expense"), request.form.get("note")
+                , date.astype(object).year, date.astype(object).month, date.astype(object).day
+                , session["user_id"], cat_id[0]["id"])
 
         return redirect("/")
 
