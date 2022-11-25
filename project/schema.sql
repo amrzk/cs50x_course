@@ -17,7 +17,9 @@ CREATE TABLE entries (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     amount NUMERIC NOT NULL,
     description TEXT,
-    date TEXT NOT NULL,
+    year NUMRIC NOT NULL,
+    month NUMRIC NOT NULL,
+    day NUMRIC NOT NULL,
     user_id INTEGER NOT NULL,
     category_id INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id),
@@ -27,3 +29,4 @@ CREATE TABLE entries (
 CREATE UNIQUE INDEX username ON users (username);
 -- CREATE UNIQUE INDEX user_id_cat ON categories (user_id);
 -- CREATE UNIQUE INDEX user_id_ent ON entries (user_id);
+

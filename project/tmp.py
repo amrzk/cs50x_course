@@ -1,6 +1,8 @@
-from cs50 import SQL
+import numpy as np
 
 
-db = SQL("sqlite:///expenses.db")
-db.execute("INSERT INTO entries (amount,description,date,user_id,category_id) VALUES (?,?,?,?,?)"
-        ,  12.5, 'tomatos', '11/17/2022', 1, 7)
+date = np.datetime64('2002-07-30')
+
+print (date.astype(object).year)
+print (date.astype(object).month)
+print (date.astype(object).day)
