@@ -24,10 +24,10 @@
                             <!-- Form Group (category)-->
                             <div class="mb-3">
                                 <label class="small mb-1">Categories</label>
-                                <select class="form-select mx-auto w-auto" name="category" required>
+                                <select class="form-select mx-auto w-100" name="category" required>
                                     <option value="" disabled selected>Pickles</option>
-                                    {% for category in categories%}
-                                        <option name="{{category}}">{{category.upper()}}</option>
+                                    {% for cat in sorted_cat%}
+                                        <option name="{{cat}}">{{cat}}</option>
                                     {% endfor %}
                                 </select>
                             </div>

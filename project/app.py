@@ -275,16 +275,27 @@ def entry():
 
     # User reached route via POST method
     if request.method == "POST":
-        # Ensure user typed a category
-        if not request.form.get("category"):
-            return apology("please add a category", 400)
+        # Ensure user input a +ve number in expense
+        try:
+            if float(request.form.get("expense")) <= 0:
+                return apology("expense must be a positive value", 400)
+        except:
+            return apology("invalid input", 400)
 
         # Ensure category doesn't already exist
-        if request.form.get("category") in categories:
-            return apology("category already exists", 400)
+        if request.form.get("category") not in categories:
+            return apology("category doesn't exists", 400)
 
-        db.execute("INSERT INTO categories (category,user_id) VALUES (?,?)", request.form.get("category"), session["user_id"])
-        return redirect("/entry")
+        # Ensure user input date
+        if not request.form.get("date"):
+            return apology("must add a date", 400)
+
+        # add entry to db
+        cat_id = db.execute("SELECT id FROM categories WHERE category = ?", request.form.get("category"))
+        db.execute("INSERT INTO entries (amount,description,date,user_id,category_id) VALUES (?,?,?,?,?)"
+                , request.form.get("expense"), request.form.get("note"), request.form.get("date"), session["user_id"], cat_id[0]["id"])
+
+        return redirect("/")
 
     # User reached route via Get method
     else:

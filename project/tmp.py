@@ -1,10 +1,6 @@
 from cs50 import SQL
 
-db = SQL("sqlite:///expenses.db")
 
-cat = db.execute("SELECT category FROM categories WHERE user_id=?", 1)
-categories = []
-for i in range(len(cat)):
-    categories.append(cat[i]['category'])
-sorted_cat = sorted(categories)
-print(sorted_cat)
+db = SQL("sqlite:///expenses.db")
+db.execute("INSERT INTO entries (amount,description,date,user_id,category_id) VALUES (?,?,?,?,?)"
+        ,  12.5, 'tomatos', '11/17/2022', 1, 7)
