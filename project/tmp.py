@@ -32,12 +32,13 @@ df = df.drop(columns=['year', 'month', 'day'])
 df = df.sort_values(by="date")
 df = df.reset_index(drop=True)
 
+print (np.datetime64('today').astype(object).month)
+
 # Lump all entries in 1 day 
 df1 = df.copy()
 df1['Total'] = df.groupby(['date'])['amount'].transform('sum')
 df1 = df1.drop_duplicates(subset=['date'])
 
-print(df.sum())
 # Lump all category entries in 1 day 
 # df2= df.copy()
 # df2['Total'] = df.groupby(['date', 'category'])['amount'].transform('sum')

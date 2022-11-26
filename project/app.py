@@ -82,9 +82,18 @@ def index():
 
     # Plot to html
     fig = go.Figure(data=data, layout=layout)
-    plotly.offline.plot(fig,filename='fig1.html',config={'displayModeBar': False})
+    plotly.offline.plot(fig,filename='templates/fig1.html',config={'displayModeBar': False})
 
     return render_template("index.html", total=total)
+
+
+
+@app.route("/fig1")
+@login_required
+def fig1():
+    """Load fig1"""
+    return render_template("fig1.html")
+
 
 
 @app.route("/history")
