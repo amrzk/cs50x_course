@@ -15,7 +15,7 @@ import plotly.graph_objs as go
 
 date_y = np.datetime64('today').astype(object).year
 date_m = np.datetime64('today').astype(object).month
-# date_d = date.astype(object).day
+# date_d = np.datetime64('today').astype(object).day
 # print(date_y, date_m, date_d)
 
 db = SQL("sqlite:///expenses.db")
@@ -32,7 +32,17 @@ df = df.drop(columns=['year', 'month', 'day'])
 df = df.sort_values(by="date")
 df = df.reset_index(drop=True)
 
-print (np.datetime64('today').astype(object).month)
+
+start = str(date_y) + "-" + str(date_m) + "-" + str(1)
+end = pd.Series(pd.date_range(start, freq="M", periods=1))
+print(start)
+print(end[0])
+period = np.datetime64(end[0]).astype(object).day
+print(period)
+srs = pd.Series(pd.date_range(start, freq="D", periods=period))
+print(srs)
+
+
 
 # Lump all entries in 1 day 
 df1 = df.copy()
