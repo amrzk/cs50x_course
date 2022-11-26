@@ -32,7 +32,7 @@ df = df.drop(columns=['year', 'month', 'day'])
 df = df.sort_values(by="date")
 df = df.reset_index(drop=True)
 
-
+# -------------------
 # Insert zero values for unused days
 start = str(date_y) + "-" + str(date_m) + "-" + str(1)
 end = pd.Series(pd.date_range(start, freq="M", periods=1))
@@ -40,8 +40,27 @@ print(start)
 print(end[0])
 period = np.datetime64(end[0]).astype(object).day
 print(period)
-srs = pd.Series(pd.date_range(start, freq="D", periods=period))
-print(srs)
+list = pd.Series(pd.date_range(start, freq="D", periods=period))
+# print(list)
+
+# todo
+# fix this
+print(df[0]["date"])
+
+
+# j = 0
+# for i in range(period):
+#     if list[i] == df[j]["date"]:
+#         list.drop(raws=i, inplace=True)
+#         j += 1
+
+# print (list)
+# join df and list then sort new df
+
+# ---------------
+
+
+
 
 
 
