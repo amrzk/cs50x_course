@@ -43,7 +43,18 @@ def index():
     """Show portfolio of stocks"""
     # retrieving user's history
 
-    return render_template("index.html")
+    date_y = np.datetime64('today').astype(object).year
+    date_m = np.datetime64('today').astype(object).month
+
+    history = db.execute(""" SELECT amount, year, month, day, categories.category
+                FROM entries INNER JOIN categories ON category_id = categories.id
+                WHERE year=? AND month=? AND entries.user_id=?""",date_y, date_m, session["user_id"])
+    
+    total = 0
+    for i in range(len(history)):
+        total += history[i]["amount"]
+
+    return render_template("index.html", total=total)
 
 
 @app.route("/history")

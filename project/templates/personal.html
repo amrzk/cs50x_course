@@ -29,27 +29,20 @@
           <div class="card-header">Categories</div>
           <div class="card-body">
             <form action="/personal" method="post">
-
               <table class="table">
-
                 <tbody>
 
                   {% for line in sorted_cat %}
-
                   <tr>
                   <th scope="row">{{loop.index}}</th>
                   <td>{{line}}</td>
                   <td>Edit</td>
                   <td>Remove</td>
                   </tr>
-
-                  
                   {% endfor %}
 
                 </tbody>
               </table>
-
-              </ol>
             </form>
           </div>
         </div>
