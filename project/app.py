@@ -51,7 +51,9 @@ def index():
 def history():
     """Show history of transactions"""
     # Look up the user's entries
-    history = db.execute("SELECT amount, description, year, month, day, categories.category FROM entries INNER JOIN categories ON category_id = categories.id WHERE entries.user_id=?", session["user_id"])
+    history = db.execute(""" SELECT amount, description, year, month, day, categories.category
+                FROM entries INNER JOIN categories ON category_id = categories.id
+                WHERE entries.user_id=?""", session["user_id"])
     return render_template("history.html", history=history)
 
 
@@ -160,7 +162,8 @@ def personal():
         if request.form.get("category") in categories:
             return apology("category already exists", 400)
 
-        db.execute("INSERT INTO categories (category,user_id) VALUES (?,?)", request.form.get("category"), session["user_id"])
+        db.execute("INSERT INTO categories (category,user_id) VALUES (?,?)"
+                    , request.form.get("category"), session["user_id"])
         return redirect("/personal")
 
     # User reached route via Get method
@@ -231,10 +234,11 @@ def entry():
 
         # add entry to db
         cat_id = db.execute("SELECT id FROM categories WHERE category = ?", request.form.get("category"))
-        db.execute("INSERT INTO entries (amount,description,year,month,day,user_id,category_id) VALUES (?,?,?,?,?,?,?)"
-                , request.form.get("expense"), request.form.get("note")
-                , date.astype(object).year, date.astype(object).month, date.astype(object).day
-                , session["user_id"], cat_id[0]["id"])
+        db.execute("""INSERT INTO entries (amount,description,year,month,day,user_id,category_id) 
+                    VALUES (?,?,?,?,?,?,?)"""
+                    , request.form.get("expense"), request.form.get("note")
+                    , date.astype(object).year, date.astype(object).month, date.astype(object).day
+                    , session["user_id"], cat_id[0]["id"])
 
         return redirect("/")
 

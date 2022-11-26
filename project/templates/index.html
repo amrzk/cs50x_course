@@ -5,36 +5,55 @@
 {% endblock %}
 
 {% block main %}
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Symbol</th>
-                <th scope="col">Name</th>
-                <th scope="col">Shares</th>
-                <th scope="col">Price</th>
-                <th scope="col">TOTAL</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in purchase %}
-                <tr>
-                    <td>{{item.symbol|e}}</td>
-                    <td>{{item.name|e}}</td>
-                    <td>{{item.shares|e}}</td>
-                    <td>{{item.price|e}}</td>
-                    <td>{{item.total|e}}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-        <tfoot>
-            <tr>
-                <td class="border-0 fw-bold text-end" colspan="4">Cash</td>
-                <td class="border-0 text-end">{{cash}}</td>
-            </tr>
-            <tr>
-                <td class="border-0 fw-bold text-end" colspan="4">TOTAL</td>
-                <td class="border-0 w-bold text-end">{{total}}</td>
-            </tr>
-        </tfoot>
-    </table>
+    <div class="container-sm px-4 mt-4">
+        <div class="row">
+            <div class="col-xl-3">
+                <!-- Add Category card-->
+                <div class="card mb-4">
+                    <div class="card-header">Add Category</div>
+                    <div class="card-body">
+                        <form action="/personal" method="post">
+                            <!-- Form Group (Category Name)-->
+                            <div class="mb-3">
+                                <label class="small mb-1" for="category">Category Name</label>
+                                <input class="form-control" id="category" name="category" type="text" placeholder="New Category" required>
+                            </div>
+                            <button class="btn btn-primary" type="submit">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-9">
+                <!-- List Category card-->
+                <div class="card mb-3">
+                    <div class="card-header">Categories</div>
+                    <div class="card-body">
+                        <form action="/personal" method="post">
+
+                            <table class="table">
+
+                                <tbody>
+
+                                    {% for line in sorted_cat %}
+
+                                    <tr>
+                                    <th scope="row">{{loop.index}}</th>
+                                    <td>{{line}}</td>
+                                    <td>Edit</td>
+                                    <td>Remove</td>
+                                    </tr>
+
+                                    
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+
+                            </ol>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
