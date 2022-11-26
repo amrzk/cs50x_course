@@ -33,6 +33,7 @@ df = df.sort_values(by="date")
 df = df.reset_index(drop=True)
 
 
+# Insert zero values for unused days
 start = str(date_y) + "-" + str(date_m) + "-" + str(1)
 end = pd.Series(pd.date_range(start, freq="M", periods=1))
 print(start)
