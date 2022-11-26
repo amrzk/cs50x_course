@@ -6,3 +6,5 @@ requests
 datetime
 gunicorn
 psycopg2
+pandas
+plotly

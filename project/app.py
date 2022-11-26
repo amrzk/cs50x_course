@@ -1,5 +1,8 @@
 import os
+import plotly
+import plotly.graph_objs as go
 import numpy as np
+import pandas as pd
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -53,6 +56,33 @@ def index():
     total = 0
     for i in range(len(history)):
         total += history[i]["amount"]
+
+    # create DataFrame from history
+    df = pd.DataFrame.from_dict(history)
+    df["date"] = df["year"].astype(str) + "-" + df["month"].astype(str) + "-" + df["day"].astype(str)
+    df["date"] = pd.to_datetime(df["date"])
+    df = df.drop(columns=['year', 'month', 'day'])
+    df = df.sort_values(by="date")
+    df = df.reset_index(drop=True)
+
+    # Lump all entries in 1 day 
+    df1 = df.copy()
+    df1['Total'] = df.groupby(['date'])['amount'].transform('sum')
+    df1 = df1.drop_duplicates(subset=['date'])
+
+    # Create a trace
+    data = [go.Scatter(
+    x = df1['date'],
+    y = df1['amount'],
+    )]
+    layout = go.Layout(
+    xaxis=dict(title='date'),
+    yaxis=dict(title='amount')
+    )
+
+    # Plot to html
+    fig = go.Figure(data=data, layout=layout)
+    plotly.offline.plot(fig,filename='fig1.html',config={'displayModeBar': False})
 
     return render_template("index.html", total=total)
 
