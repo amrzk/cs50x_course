@@ -1,48 +1,48 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    History
+  History
 {% endblock %}
 
 {% block main %}
-    <table class="table">
+  <table class="table">
 
-    </table>
-    
-    <div class="container-sm px-4 mt-4">
-        <div class="col-xl-10 offset-lg-1">
-            <div class="card mb-3">
-                <div class="card-header">History</div>
-                <div class="card-body">
-                    <form action="/personal" method="post">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Category</th>
-                                    <th scope="col">Amount Spent</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Note</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in history %}
-                                    <tr>
-                                        <td>{{item.category|e}}</td>
-                                        <td>{{item.amount|e}}</td>
-                                        <td>{{item.year|e}}-{{item.month|e}}-{{item.day|e}}</td>
-                                        <td>{{item.description|e}}</td>
-                                        <td>Edit</td>
-                                        <td>Remove</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                            </table>
-                        </ol>
-                    </form>
-                </div>
-            </div>
+  </table>
+  
+  <div class="container-sm px-4 mt-4">
+    <div class="col-xl-10 offset-lg-1">
+      <div class="card mb-3">
+        <div class="card-header">History</div>
+        <div class="card-body">
+          <form action="/personal" method="post">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Category</th>
+                  <th scope="col">Amount Spent</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Note</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in history %}
+                  <tr>
+                    <td>{{item.category|e}}</td>
+                    <td>{{item.amount|e}}</td>
+                    <td>{{item.year|e}}-{{item.month|e}}-{{item.day|e}}</td>
+                    <td>{{item.description|e}}</td>
+                    <td>Edit</td>
+                    <td>Remove</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+              </table>
+            </ol>
+          </form>
         </div>
+      </div>
     </div>
+  </div>
 
 
 {% endblock %}
