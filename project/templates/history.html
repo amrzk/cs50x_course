@@ -14,31 +14,29 @@
       <div class="card mb-3">
         <div class="card-header">History</div>
         <div class="card-body">
-          <form action="/personal" method="post">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Category</th>
-                  <th scope="col">Amount Spent</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Note</th>
-                </tr>
-              </thead>
-              <tbody>
-                <form action="/history" method="post">
-                {% for item in history %}
-                    <tr>
-                      <td>{{item.category|e}}</td>
-                      <td>{{item.amount|e}}</td>
-                      <td>{{item.year|e}}-{{item.month|e}}-{{item.day|e}}</td>
-                      <td>{{item.description|e}}</td>
-                      <td><button class="btn btn-primary" type="submit" name="submit_button" value="{{item.id|e}}">Remove</button></td>
-                    </tr>
-                  {% endfor %}
-                </form>
-              </tbody>
-            </table>
-          </form>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Category</th>
+                <th scope="col">Amount Spent</th>
+                <th scope="col">Date</th>
+                <th scope="col">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <form action="/history" method="POST">
+              {% for item in history %}
+                  <tr>
+                    <td>{{item.category|e}}</td>
+                    <td>{{item.amount|e}}</td>
+                    <td>{{item.year|e}}-{{item.month|e}}-{{item.day|e}}</td>
+                    <td>{{item.description|e}}</td>
+                    <td><button class="btn btn-outline-primary btn-sm" type="submit" name="submit_button" value="{{item.id|e}}">Remove</button></td>
+                  </tr>
+                {% endfor %}
+              </form>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

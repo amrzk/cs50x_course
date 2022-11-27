@@ -18,7 +18,7 @@
             </div>
           </div>
         </div>
-        <!-- Add Summary card-->
+        <!-- Add summary card-->
         <div class="card mb-4">
           <div class="card-header">Summary</div>
           <div class="card-body">
@@ -30,8 +30,20 @@
           </div>
         </div>
       </div>
+      {% if total == 0 %}
       <div class="col-xl-9">
-        <!-- List Charts card-->
+        <!-- List empty charts card-->
+        <div class="card mb-3">
+          <div class="card-header">Charts</div>
+          <div class="card-body">
+            <!-- Add a place holder for the beginning of the month -->
+            <p>No data</p>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="col-xl-9">
+        <!-- List charts card-->
         <div class="card mb-3">
           <div class="card-header">Charts</div>
           <div class="card-body">
@@ -40,6 +52,8 @@
           </div>
         </div>
       </div>
+      {% endif %}
+
     </div>
   </div>
 {% endblock %}

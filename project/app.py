@@ -52,6 +52,8 @@ def index():
     history = db.execute(""" SELECT amount, year, month, day, categories.category
                 FROM entries INNER JOIN categories ON category_id = categories.id
                 WHERE year=? AND month=? AND entries.user_id=?""",date_y, date_m, session["user_id"])
+    if len(history) == 0:
+        return render_template("index.html", total=0)
     
     # create DataFrame from history
     df = pd.DataFrame.from_dict(history)
