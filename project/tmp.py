@@ -3,7 +3,7 @@ import pandas as pd
 from cs50 import SQL
 
 import plotly
-import plotly.graph_objs as go
+# import plotly.graph_objs as go
 
 # date = np.datetime64('2002-07-30')
 
@@ -29,61 +29,36 @@ df = pd.DataFrame.from_dict(history)
 df["date"] = df["year"].astype(str) + "-" + df["month"].astype(str) + "-" + df["day"].astype(str)
 df["date"] = pd.to_datetime(df["date"])
 df = df.drop(columns=['year', 'month', 'day'])
-df = df.sort_values(by="date")
-df = df.reset_index(drop=True)
-print(df)
 
-# -------------------
 # Insert zero values for unused days
 start = str(date_y) + "-" + str(date_m) + "-" + str(1)
 end = pd.Series(pd.date_range(start, freq="M", periods=1))
 period = np.datetime64(end[0]).astype(object).day
-list = pd.Series(pd.date_range(start, freq="D", periods=period))
-list = list.to_frame()
-list.rename(columns = {0:'date'}, inplace = True)
-list["amount"] = 0
-list["category"] = "-"
-list = list [["amount", "category", "date"]]
+
+# Zero values dataframe for all days of the month
+list = pd.DataFrame({'amount':None, 
+                   'category':"-",
+                   'date':pd.date_range(start, freq="D", periods=period)})
+
+# Concat both df and list
+df = pd.concat([df,list]).sort_values(['date', 'amount'], ascending=[True, False])
+
+total = df["amount"].sum()
+print(total)
 
 
-# todo
-j = 0
-for i in range(period):
-    if list.iloc[i]["date"] == df.iloc[j]["date"]:
-        list.drop(index=[i], inplace=True)
-        j += 1
+import plotly.express as px
 
-list = list.reset_index(drop=True)
-print (list)
-# join df and list then sort new df
-
-# ---------------
-
-
-
-
-
-
-# Lump all entries in 1 day 
-df1 = df.copy()
-df1['Total'] = df.groupby(['date'])['amount'].transform('sum')
-df1 = df1.drop_duplicates(subset=['date'])
-
-# Lump all category entries in 1 day 
-# df2= df.copy()
-# df2['Total'] = df.groupby(['date', 'category'])['amount'].transform('sum')
-# df2 = df2.drop_duplicates(subset=['date', 'category'])
-
-# Create a trace
-data = [go.Scatter(
-x = df1['date'],
-y = df1['amount'],
-)]
-layout = go.Layout(
-xaxis=dict(title='date'),
-yaxis=dict(title='amount')
-)
-
+fig1 = px.bar(df, x="date", y="amount", color="category", text_auto=True)
 # Plot to html
-fig = go.Figure(data=data, layout=layout)
-plotly.offline.plot(fig,filename='fig1.html',config={'displayModeBar': False})
+fig1.update_layout(showlegend=False, 
+            xaxis = dict(tick0=0, dtick = 2*86400000, ticklabelmode="instant", tickangle= -45
+            ))
+
+config = {'displayModeBar': False}
+# plotly.offline.plot(fig1,filename='tmp_fig1.html',config=config)
+
+print(df)
+
+fig2 = px.pie(df, values='amount', names='category')
+plotly.offline.plot(fig2,filename='tmp_fig2.html',config=config)

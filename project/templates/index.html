@@ -12,27 +12,31 @@
         <div class="card mb-4">
           <div class="card-header">Expenses</div>
           <div class="card-body">
-            <form action="/personal" method="post">
-              <!-- Form Group (Total Expenses Name)-->
-              <div class="mb-3">
-                <h1>{{total}}</h1>
-              </div>
-            </form>
+            <!-- Form Group (Total Expenses Name)-->
+            <div class="mb-3">
+              <h1>{{total}}</h1>
+            </div>
+          </div>
+        </div>
+        <!-- Add Summary card-->
+        <div class="card mb-4">
+          <div class="card-header">Summary</div>
+          <div class="card-body">
+            <!-- Form Group (Expenses Summary)-->
+            <div class="mb-3">
+              <a href="fig1">Website</a>
+              <!-- <h1>{{total}}</h1> -->
+            </div>
           </div>
         </div>
       </div>
       <div class="col-xl-9">
-        <!-- List Category card-->
+        <!-- List Charts card-->
         <div class="card mb-3">
           <div class="card-header">Charts</div>
           <div class="card-body">
-            <form action="/personal" method="post">
-              <table class="table">
-                <tbody>
-                  <object data="/fig1" style="position:relative; width:100%; height:500px;"></object>
-                </tbody>
-              </table>
-            </form>
+            <object data="/fig1" style="position:relative; width:100%; height:500px;"></object>
+            <object data="/fig2" style="position:relative; width:100%; height:500px;"></object>
           </div>
         </div>
       </div>

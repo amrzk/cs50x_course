@@ -1,6 +1,6 @@
 import os
 import plotly
-import plotly.graph_objs as go
+import plotly.express as px
 import numpy as np
 import pandas as pd
 
@@ -53,39 +53,48 @@ def index():
                 FROM entries INNER JOIN categories ON category_id = categories.id
                 WHERE year=? AND month=? AND entries.user_id=?""",date_y, date_m, session["user_id"])
     
-    total = 0
-    for i in range(len(history)):
-        total += history[i]["amount"]
-
     # create DataFrame from history
     df = pd.DataFrame.from_dict(history)
     df["date"] = df["year"].astype(str) + "-" + df["month"].astype(str) + "-" + df["day"].astype(str)
     df["date"] = pd.to_datetime(df["date"])
     df = df.drop(columns=['year', 'month', 'day'])
-    df = df.sort_values(by="date")
-    df = df.reset_index(drop=True)
 
-    # Lump all entries in 1 day 
-    df1 = df.copy()
-    df1['Total'] = df.groupby(['date'])['amount'].transform('sum')
-    df1 = df1.drop_duplicates(subset=['date'])
+    # total (amount)
+    total = df["amount"].sum()
 
-    # Create a trace
-    data = [go.Scatter(
-    x = df1['date'],
-    y = df1['amount'],
-    )]
-    layout = go.Layout(
-    xaxis=dict(title='date'),
-    yaxis=dict(title='amount')
-    )
+    # NULL values dataframe for all days of the month
+    start = str(date_y) + "-" + str(date_m) + "-" + str(1)
+    end = pd.Series(pd.date_range(start, freq="M", periods=1))
+    period = np.datetime64(end[0]).astype(object).day
+
+    list = pd.DataFrame({
+        'amount':None, 'category':"-",
+        'date':pd.date_range(start, freq="D", periods=period)})
+
+    # Concatenate both df and list
+    df = pd.concat([df,list]).sort_values(['date', 'amount'], ascending=[True, False])
+
+    # Create fig1
+    fig1 = px.pie(df, values='amount', names='category',
+         labels = dict(date="Date", amount="Money Spent", category="Category"))
+    fig1.update_layout(showlegend=True)
+    fig1.update_traces(textposition='inside', textinfo='percent+label')
+
+    # Create the fig2
+    fig2 = px.bar(df, x="date", y="amount", color="category", text_auto=True,
+         labels = dict(date="Date", amount="Money Spent", category="Category"))
+    fig2.update_layout(
+        showlegend=False, 
+        xaxis = dict(dtick=2*86400000.0, tickmode='linear', ticklabelmode="instant",
+        tickformat='%b-%d', tickangle= -45,))
+    fig2.update_traces(textangle=0, textposition="outside", cliponaxis=False)
 
     # Plot to html
-    fig = go.Figure(data=data, layout=layout)
-    plotly.offline.plot(fig,filename='templates/fig1.html',config={'displayModeBar': False})
+    config = {'displayModeBar': False, 'staticPlot': False}
+    plotly.offline.plot(fig1,filename='templates/fig1.html',config=config)
+    plotly.offline.plot(fig2,filename='templates/fig2.html',config=config)
 
     return render_template("index.html", total=total)
-
 
 
 @app.route("/fig1")
@@ -94,6 +103,12 @@ def fig1():
     """Load fig1"""
     return render_template("fig1.html")
 
+
+@app.route("/fig2")
+@login_required
+def fig2():
+    """Load fig2"""
+    return render_template("fig2.html")
 
 
 @app.route("/history")
