@@ -84,7 +84,7 @@ def index():
     fig2 = px.bar(df, x="date", y="amount", color="category", text_auto=True,
          labels = dict(date="Date", amount="Money Spent", category="Category"))
     fig2.update_layout(
-        showlegend=False, 
+        showlegend=True, 
         xaxis = dict(dtick=2*86400000.0, tickmode='linear', ticklabelmode="instant",
         tickformat='%b-%d', tickangle= -45,))
     fig2.update_traces(textangle=0, textposition="outside", cliponaxis=False)
