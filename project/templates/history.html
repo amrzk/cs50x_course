@@ -25,19 +25,19 @@
                 </tr>
               </thead>
               <tbody>
+                <form action="/history" method="post">
                 {% for item in history %}
-                  <tr>
-                    <td>{{item.category|e}}</td>
-                    <td>{{item.amount|e}}</td>
-                    <td>{{item.year|e}}-{{item.month|e}}-{{item.day|e}}</td>
-                    <td>{{item.description|e}}</td>
-                    <td>Edit</td>
-                    <td>Remove</td>
-                  </tr>
-                {% endfor %}
+                    <tr>
+                      <td>{{item.category|e}}</td>
+                      <td>{{item.amount|e}}</td>
+                      <td>{{item.year|e}}-{{item.month|e}}-{{item.day|e}}</td>
+                      <td>{{item.description|e}}</td>
+                      <td><button class="btn btn-primary" type="submit" name="submit_button" value="{{item.id|e}}">Remove</button></td>
+                    </tr>
+                  {% endfor %}
+                </form>
               </tbody>
-              </table>
-            </ol>
+            </table>
           </form>
         </div>
       </div>

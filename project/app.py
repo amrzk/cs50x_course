@@ -111,15 +111,27 @@ def fig2():
     return render_template("fig2.html")
 
 
-@app.route("/history")
+@app.route("/history", methods=["GET", "POST"])
 @login_required
 def history():
     """Show history of transactions"""
-    # Look up the user's entries
-    history = db.execute(""" SELECT amount, description, year, month, day, categories.category
-                FROM entries INNER JOIN categories ON category_id = categories.id
-                WHERE entries.user_id=?""", session["user_id"])
-    return render_template("history.html", history=history)
+    # User reached route via POST method
+    if request.method == "POST":
+        # check for submit_button
+        if request.form['submit_button']:
+            id = request.form['submit_button']
+            print(id)
+            db.execute("DELETE FROM entries WHERE id=?", id)
+            return redirect("/history")
+        return apology("entry doesn't exist", 400)
+
+    # User reached route via GET
+    else:
+        # Look up the user's entries
+        history = db.execute(""" SELECT amount, description, year, month, day, entries.id, categories.category
+                    FROM entries INNER JOIN categories ON category_id = categories.id
+                    WHERE entries.user_id=?""", session["user_id"])
+        return render_template("history.html", history=history)
 
 
 @app.route("/register", methods=["GET", "POST"])
