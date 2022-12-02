@@ -18,7 +18,7 @@
                 <label class="small mb-1" for="category">Category Name</label>
                 <input class="form-control" id="category" name="category" type="text" placeholder="New Category" required>
               </div>
-              <button class="btn btn-primary" type="submit">Add</button>
+              <button class="btn btn-primary" type="submit" name="add_button" value="add_button">Add</button>
             </form>
           </div>
         </div>
@@ -32,12 +32,11 @@
               <table class="table">
                 <tbody>
 
-                  {% for line in sorted_cat %}
+                  {% for item in cat %}
                   <tr>
                   <th scope="row">{{loop.index}}</th>
-                  <td>{{line}}</td>
-                  <td>Edit</td>
-                  <td>Remove</td>
+                  <td>{{item.category|e}}</td>
+                  <td><button class="btn btn-outline-primary btn-sm" type="submit" name="remove_button" value="{{item.id|e}}">Remove</button></td>
                   </tr>
                   {% endfor %}
 

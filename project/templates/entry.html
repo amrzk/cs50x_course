@@ -25,9 +25,9 @@
               <div class="mb-3">
                 <label class="small mb-1">Categories</label>
                 <select class="form-select mx-auto w-100" name="category" required>
-                  <option value="" disabled selected>Pickles</option>
+                  <option value="" disabled selected>{{place_holder}}</option>
                   {% for cat in sorted_cat%}
-                    <option name="{{cat}}">{{cat}}</option>
+                    <option name="{{cat}}" value="{{cat}}">{{cat}}</option>
                   {% endfor %}
                 </select>
               </div>

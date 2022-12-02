@@ -31,6 +31,9 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///expenses.db")
 
+# Place holder text (Gimmick)
+place_holder = "Kittens"
+
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -45,52 +48,56 @@ def after_request(response):
 def index():
     """Show portfolio of stocks"""
     # retrieving user's history
-
     date_y = np.datetime64('today').astype(object).year
     date_m = np.datetime64('today').astype(object).month
 
     history = db.execute(""" SELECT amount, year, month, day, categories.category
-                FROM entries INNER JOIN categories ON category_id = categories.id
+                FROM entries LEFT JOIN categories ON category_id = categories.id
                 WHERE year=? AND month=? AND entries.user_id=?""",date_y, date_m, session["user_id"])
     if len(history) == 0:
         return render_template("index.html", total=0)
-    
+
     # create DataFrame from history
     df = pd.DataFrame.from_dict(history)
     df["date"] = df["year"].astype(str) + "-" + df["month"].astype(str) + "-" + df["day"].astype(str)
     df["date"] = pd.to_datetime(df["date"])
     df = df.drop(columns=['year', 'month', 'day'])
 
+    # Replace NaN (removed categories) for Pickles
+    df.category.fillna(value=place_holder, inplace=True)
+
     # total (amount)
     total = df["amount"].sum()
 
     # NULL values dataframe for all days of the month
-    start = str(date_y) + "-" + str(date_m) + "-" + str(1)
+    start = str(date_y) + "-" + str(date_m) + "-" + str("01")
     end = pd.Series(pd.date_range(start, freq="M", periods=1))
     period = np.datetime64(end[0]).astype(object).day
 
     list = pd.DataFrame({
-        'amount':None, 'category':"-",
+        'amount':None, 'category':None,
         'date':pd.date_range(start, freq="D", periods=period)})
 
     # Concatenate both df and list
     df = pd.concat([df,list]).sort_values(['date', 'amount'], ascending=[True, False])
 
     # Create fig1
-    fig1 = px.pie(df, values='amount', names='category',
-         labels = dict(date="Date", amount="Money Spent", category="Category"))
+    fig1 = px.pie(df, values='amount', names='category', color_discrete_sequence=px.colors.qualitative.Safe,
+         labels = dict(date="Date", amount="Money Spent", category="Categories"))
     fig1.update_layout(showlegend=True)
     fig1.update_traces(textposition='inside', textinfo='percent+label')
 
     # Create the fig2
-    fig2 = px.bar(df, x="date", y="amount", color="category", text_auto=True,
-         labels = dict(date="Date", amount="Money Spent", category="Category"))
+    xaxis_start = pd.to_datetime(start) - pd.Timedelta(days=1)
+    fig2 = px.bar(df, x="date", y="amount", color="category", text_auto=False,
+        color_discrete_sequence=px.colors.qualitative.Safe,
+        labels = dict(date="Date", amount="Money Spent", category="Categories"))
     fig2.update_layout(
-        showlegend=True, 
+        showlegend=False, xaxis_title=None,
         xaxis = dict(dtick=2*86400000.0, tickmode='linear', ticklabelmode="instant",
-        tickformat='%b-%d', tickangle= -45,))
+        tickformat='%b-%d', tickangle= -45, autorange= False, range=[xaxis_start, end[0]]))
     fig2.update_traces(textangle=0, textposition="outside", cliponaxis=False)
-
+    
     # Plot to html
     config = {'displayModeBar': False, 'staticPlot': False}
     plotly.offline.plot(fig1,filename='templates/fig1.html',config=config)
@@ -119,11 +126,10 @@ def history():
     """Show history of transactions"""
     # User reached route via POST method
     if request.method == "POST":
-        # check for submit_button
-        if request.form['submit_button']:
-            id = request.form['submit_button']
-            print(id)
-            db.execute("DELETE FROM entries WHERE id=?", id)
+        # check for remove_button
+        if 'remove_button' in request.form:
+            id = request.form['remove_button']
+            db.execute("DELETE FROM entries WHERE user_id=? AND id=?", session["user_id"], id)
             return redirect("/history")
         return apology("entry doesn't exist", 400)
 
@@ -131,8 +137,14 @@ def history():
     else:
         # Look up the user's entries
         history = db.execute(""" SELECT amount, description, year, month, day, entries.id, categories.category
-                    FROM entries INNER JOIN categories ON category_id = categories.id
+                    FROM entries LEFT JOIN categories ON category_id = categories.id
                     WHERE entries.user_id=?""", session["user_id"])
+
+        # Replace NaN(removed categories) for Pickles
+        history = pd.DataFrame.from_dict(history)
+        history.category.fillna(value=place_holder, inplace=True)
+        history = history.to_dict('records')
+
         return render_template("history.html", history=history)
 
 
@@ -225,29 +237,50 @@ def logout():
 def personal():
     """personal page"""
     # List all the user's categories
-    cat = db.execute("SELECT category FROM categories WHERE user_id=?", session["user_id"])
-    categories = []
-    for i in range(len(cat)):
-        categories.append(cat[i]['category'])
-    sorted_cat = sorted(categories)
+    cat = db.execute("SELECT id, category FROM categories WHERE user_id=?", session["user_id"])
+    try:
+        cat = pd.DataFrame.from_dict(cat).sort_values(['category']).reset_index()
+    except:
+        cat = pd.DataFrame.from_dict(cat)
+        cat['category'] = None
 
     # User reached route via POST method
     if request.method == "POST":
-        # Ensure user typed a category
-        if not request.form.get("category"):
-            return apology("please add a category", 400)
 
-        # Ensure category doesn't already exist
-        if request.form.get("category") in categories:
-            return apology("category already exists", 400)
+        # check for remove_button
+        if 'remove_button' in request.form:
+            id = request.form['remove_button']
+            
+            # id not in database
+            db_id = db.execute("SELECT * FROM categories WHERE user_id=? AND id=?", session["user_id"], id)
+            if len(db_id) == 0:
+                return apology("category doesn't exist", 400)
+            
+            db.execute("DELETE FROM categories WHERE user_id=? AND id=?", session["user_id"], id)
+            return redirect("/personal")
 
-        db.execute("INSERT INTO categories (category,user_id) VALUES (?,?)"
-                    , request.form.get("category"), session["user_id"])
-        return redirect("/personal")
+        # check for add_button
+        elif 'add_button' in request.form:
+            # Ensure user typed a category
+            if not request.form.get("category"):
+                return apology("please add a category", 400)
+            print(request.form.get('category'))
+            # Ensure category doesn't already exist
+            if request.form.get("category") in cat['category'].unique():
+                return apology("category already exists", 400)
 
+            db.execute("INSERT INTO categories (category,user_id) VALUES (?,?)"
+                        , request.form.get("category"), session["user_id"])
+            return redirect("/personal")
+
+        else:
+            # POST method using an illegal button
+            return apology("illegal entry", 400)
+        
     # User reached route via Get method
     else:
-        return render_template("personal.html", sorted_cat=sorted_cat)
+        cat = cat.to_dict('records')
+        return render_template("personal.html", cat=cat)
 
 
 @app.route("/security", methods=["GET", "POST"])
@@ -323,5 +356,5 @@ def entry():
 
     # User reached route via Get method
     else:
-        return render_template("entry.html", sorted_cat=sorted_cat)
+        return render_template("entry.html", sorted_cat=sorted_cat, place_holder=place_holder)
 
