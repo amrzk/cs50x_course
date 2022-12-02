@@ -140,10 +140,16 @@ def history():
                     FROM entries LEFT JOIN categories ON category_id = categories.id
                     WHERE entries.user_id=?""", session["user_id"])
 
+        try:
+            history = pd.DataFrame.from_dict(history).sort_values(['day', 'month', 'year', 'amount'], ascending=False)
+        except:
+            history = pd.DataFrame.from_dict(history)
+            history['category'] = None
+            
         # Replace NaN(removed categories) for Pickles
-        history = pd.DataFrame.from_dict(history)
         history.category.fillna(value=place_holder, inplace=True)
         history = history.to_dict('records')
+            
 
         return render_template("history.html", history=history)
 
