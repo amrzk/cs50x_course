@@ -60,7 +60,7 @@ def index():
     df = pd.DataFrame.from_dict(history)
     df["date"] = df["year"].astype(str) + "-" + df["month"].astype(str) + "-" + df["day"].astype(str)
     df["date"] = pd.to_datetime(df["date"])
-    df = df.drop(columns=['year', 'month', 'day'])
+    df = df.drop(columns=['year', 'month', 'day']).sort_values(['date', 'amount'], ascending=[True, False])
 
     # Replace NaN (removed categories) for Pickles
     df.category.fillna(value=place_holder, inplace=True)
@@ -68,17 +68,9 @@ def index():
     # total (amount)
     total = df["amount"].sum()
 
-    # NULL values dataframe for all days of the month
+    # Start and end days of the month
     start = str(date_y) + "-" + str(date_m) + "-" + str("01")
     end = pd.Series(pd.date_range(start, freq="M", periods=1))
-    period = (end[0] - pd.to_datetime(start) + pd.Timedelta(days=1)).days
-
-    list = pd.DataFrame({
-        'amount':None, 'category':None,
-        'date':pd.date_range(start, freq="D", periods=period)})
-
-    # Concatenate both df and list
-    df = pd.concat([df,list]).sort_values(['date', 'amount'], ascending=[True, False])
 
     # Create fig1
     xaxis_start = pd.to_datetime(start) - pd.Timedelta(days=1)
