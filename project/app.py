@@ -11,7 +11,7 @@ from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 
-from helpers import apology, login_required, usd
+from helpers import apology, login_required
 
 
 # Configure application
@@ -19,9 +19,6 @@ app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
-
-# Custom filter
-app.jinja_env.filters["usd"] = usd
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
@@ -82,22 +79,22 @@ def index():
     df = pd.concat([df,list]).sort_values(['date', 'amount'], ascending=[True, False])
 
     # Create fig1
-    fig1 = px.pie(df, values='amount', names='category', color_discrete_sequence=px.colors.qualitative.Safe,
-         labels = dict(date="Date", amount="Money Spent", category="Categories"))
-    fig1.update_layout(showlegend=True)
-    fig1.update_traces(textposition='inside', textinfo='percent+label')
-
-    # Create the fig2
     xaxis_start = pd.to_datetime(start) - pd.Timedelta(days=1)
-    fig2 = px.bar(df, x="date", y="amount", color="category", text_auto=False,
+    fig1 = px.bar(df, x="date", y="amount", color="category", text_auto=False,
         color_discrete_sequence=px.colors.qualitative.Safe,
         labels = dict(date="Date", amount="Money Spent", category="Categories"))
-    fig2.update_layout(
+    fig1.update_layout(
         showlegend=False, xaxis_title=None,
         xaxis = dict(dtick=2*86400000.0, tickmode='linear', ticklabelmode="instant",
         tickformat='%b-%d', tickangle= -45, autorange= False, range=[xaxis_start, end[0]]))
-    fig2.update_traces(textangle=0, textposition="outside", cliponaxis=False)
+    fig1.update_traces(textangle=0, textposition="outside", cliponaxis=False)
     
+    # Create fig2
+    fig2 = px.pie(df, values='amount', names='category', color_discrete_sequence=px.colors.qualitative.Safe,
+         labels = dict(date="Date", amount="Money Spent", category="Categories"))
+    fig2.update_layout(showlegend=False)
+    fig2.update_traces(textposition='inside', textinfo='percent+label')
+
     # Plot to html
     config = {'displayModeBar': False, 'staticPlot': False}
     plotly.offline.plot(fig1,filename='templates/fig1.html',config=config)

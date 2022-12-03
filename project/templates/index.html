@@ -42,16 +42,20 @@
         </div>
       </div>
       {% else %}
+
       <div class="col-xl-9">
         <!-- List charts card-->
         <div class="card mb-3">
           <div class="card-header">Charts</div>
           <div class="card-body">
-            <div class="ratio ratio-1x1">
-              <object data="/fig1"></object>
-            </div>
-            <div class="ratio ratio-16x9">
-              <object data="/fig2"\></object>
+            <!-- Plot selector -->
+            <select  aria-label="Chart Selector" class="form-select w-100" id="chart_selector">
+              <option value="1" selected>Bar</option>
+              <option value="2">Pie</option>
+            </select>
+            <!-- Plot -->
+            <div class="ratio ratio-16x9" id="object_ratio">
+              <object data="/fig1" id="object_chart"></object>
             </div>
           </div>
         </div>
@@ -60,4 +64,21 @@
 
     </div>
   </div>
+
+  <script type="text/javascript">
+    // Listen to changes in the chart selector values and show the corresponding chart
+    document.querySelector('#chart_selector').addEventListener('change', function(){
+      var obj_ratio = document.getElementById("object_ratio");
+      var obj_chart = document.getElementById("object_chart");
+      if (this.value == "1"){
+        //obj_ratio.setAttribute("class", "ratio ratio-16x9")
+        obj_chart.setAttribute("data", "/fig1");
+      }
+      else{
+        //obj_ratio.setAttribute("class", "ratio ratio-4x3")
+        obj_chart.setAttribute("data", "/fig2");
+      }
+    });
+  </script>
+
 {% endblock %}
