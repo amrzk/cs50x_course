@@ -9,7 +9,7 @@
     <div class="row">
       <div class="col-xl-3">
         <!-- Add Total card-->
-        <div class="card mb-4">
+        <div class="card mb-3 shadow">
           <div class="card-header">Expenses</div>
           <div class="card-body">
             <!-- Form Group (Total Expenses Name)-->
@@ -19,7 +19,7 @@
           </div>
         </div>
         <!-- Add summary card-->
-        <div class="card mb-4">
+        <div class="card mb-3 shadow">
           <div class="card-header">Summary</div>
           <div class="card-body">
             <!-- Form Group (Expenses Summary)-->
@@ -30,10 +30,12 @@
           </div>
         </div>
       </div>
+
       {% if total == 0 %}
+      <!--in case history is empty or beginning of month-->
       <div class="col-xl-9">
         <!-- List empty charts card-->
-        <div class="card mb-3">
+        <div class="card mb-3 shadow">
           <div class="card-header">Charts</div>
           <div class="card-body">
             <!-- Add a place holder for the beginning of the month -->
@@ -41,21 +43,32 @@
           </div>
         </div>
       </div>
-      {% else %}
 
+      {% else %}
       <div class="col-xl-9">
         <!-- List charts card-->
-        <div class="card mb-3">
+        <div class="card mb-3 shadow">
           <div class="card-header">Charts</div>
           <div class="card-body">
             <!-- Plot selector -->
-            <select  aria-label="Chart Selector" class="form-select w-100" id="chart_selector">
-              <option value="1" selected>Bar</option>
-              <option value="2">Pie</option>
-            </select>
+            <nav>
+              <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                <button class="nav-link active " id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Bar</button>
+                <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Pie</button>
+              </div>
+            </nav>
             <!-- Plot -->
-            <div class="ratio ratio-16x9" id="object_ratio">
-              <object data="/fig1" id="object_chart"></object>
+            <div class="tab-content" id="nav-tabContent">
+              <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="ratio ratio-16x9">
+                  <object data="/fig1"></object>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                <div class="ratio ratio-16x9">
+                  <object data="/fig2"></object>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -64,21 +77,5 @@
 
     </div>
   </div>
-
-  <script type="text/javascript">
-    // Listen to changes in the chart selector values and show the corresponding chart
-    document.querySelector('#chart_selector').addEventListener('change', function(){
-      var obj_ratio = document.getElementById("object_ratio");
-      var obj_chart = document.getElementById("object_chart");
-      if (this.value == "1"){
-        //obj_ratio.setAttribute("class", "ratio ratio-16x9")
-        obj_chart.setAttribute("data", "/fig1");
-      }
-      else{
-        //obj_ratio.setAttribute("class", "ratio ratio-4x3")
-        obj_chart.setAttribute("data", "/fig2");
-      }
-    });
-  </script>
 
 {% endblock %}

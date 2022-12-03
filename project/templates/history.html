@@ -10,8 +10,8 @@
   </table>
   
   <div class="container-sm px-4 mt-4">
-    <div class="col-xl-10 offset-lg-1">
-      <div class="card mb-3">
+    <div class="col-xl-10 offset-lg-1 shadow">
+      <div class="card mb-3 shadow">
         <div class="card-header">History</div>
         <div class="card-body">
           <table class="table">
@@ -34,6 +34,7 @@
                     <td><button class="btn btn-outline-primary btn-sm" type="submit" name="remove_button" value="{{item.id|e}}">Remove</button></td>
                   </tr>
                 {% endfor %}
+                
               </form>
             </tbody>
           </table>
