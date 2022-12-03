@@ -20,14 +20,28 @@ df = pd.DataFrame.from_dict(history)
 df.category.fillna(value='Pickles', inplace=True)
 df = df.to_dict('records')
 
-# %%
-import plotly
-import plotly.graph_objects as go
-fig = go.Figure()
-fig.add_scatter(x=[1, 3], y=[5, 4])
-fig.add_scatter(x=[1, 10], y=[5, 4])
-fig.update_layout("autorange": false, "range": ["2020-01-01", "2020-12-31"],)
+date_y = pd.to_datetime("today").year
+date_m = pd.to_datetime("today").month
+date_d = pd.to_datetime("today").day
 
-config = {'displayModeBar': False, 'staticPlot': False}
-plotly.offline.plot(fig,filename='fig.html',config=config)
+start = str(date_y) + "-" + str(date_m) + "-" + str("01")
+end = pd.Series(pd.date_range(start, freq="M", periods=1))
+
+period = (end[0] - pd.to_datetime(start) + pd.Timedelta(days=1)).days
+
+# print(period)
+
+x = "2022-12-06"
+print(pd.to_datetime(x))
+
+# %%
+# import plotly
+# import plotly.graph_objects as go
+# fig = go.Figure()
+# fig.add_scatter(x=[1, 3], y=[5, 4])
+# fig.add_scatter(x=[1, 10], y=[5, 4])
+# fig.update_layout("autorange": false, "range": ["2020-01-01", "2020-12-31"],)
+
+# config = {'displayModeBar': False, 'staticPlot': False}
+# plotly.offline.plot(fig,filename='fig.html',config=config)
 # %%

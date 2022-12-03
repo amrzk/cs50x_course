@@ -1,7 +1,6 @@
 import os
 import plotly
 import plotly.express as px
-import numpy as np
 import pandas as pd
 
 from cs50 import SQL
@@ -9,7 +8,7 @@ from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
-from datetime import datetime
+# from datetime import datetime
 
 from helpers import apology, login_required
 
@@ -45,8 +44,9 @@ def after_request(response):
 def index():
     """Show portfolio of stocks"""
     # retrieving user's history
-    date_y = np.datetime64('today').astype(object).year
-    date_m = np.datetime64('today').astype(object).month
+    date_y = pd.to_datetime("today").year
+    date_m = pd.to_datetime("today").month
+    # date_d = pd.to_datetime("today").day
 
     history = db.execute(""" SELECT amount, year, month, day, categories.category
                 FROM entries LEFT JOIN categories ON category_id = categories.id
@@ -69,7 +69,7 @@ def index():
     # NULL values dataframe for all days of the month
     start = str(date_y) + "-" + str(date_m) + "-" + str("01")
     end = pd.Series(pd.date_range(start, freq="M", periods=1))
-    period = np.datetime64(end[0]).astype(object).day
+    period = (end[0] - pd.to_datetime(start) + pd.Timedelta(days=1)).days
 
     list = pd.DataFrame({
         'amount':None, 'category':None,
@@ -343,7 +343,7 @@ def entry():
         if not request.form.get("date"):
             return apology("must add a date", 400)
         try:
-            date = np.datetime64(request.form.get("date"))
+            date = pd.to_datetime(request.form.get("date"))
         except:
             return apology("invalid date", 400)
 
@@ -352,7 +352,7 @@ def entry():
         db.execute("""INSERT INTO entries (amount,description,year,month,day,user_id,category_id) 
                     VALUES (?,?,?,?,?,?,?)"""
                     , request.form.get("expense"), request.form.get("note")
-                    , date.astype(object).year, date.astype(object).month, date.astype(object).day
+                    , date.year, date.month, date.day
                     , session["user_id"], cat_id[0]["id"])
 
         return redirect("/")

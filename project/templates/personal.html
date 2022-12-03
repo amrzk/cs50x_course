@@ -36,7 +36,26 @@
                   <tr>
                   <th scope="row">{{loop.index}}</th>
                   <td>{{item.category|e}}</td>
-                  <td><button class="btn btn-outline-primary btn-sm" type="submit" name="remove_button" value="{{item.id|e}}">Remove</button></td>
+                  <td>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#refid{{item.id|e}}">Remove</button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="refid{{item.id|e}}" tabindex="-1" aria-labelledby="#refid{{item.id|e}}Label" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="#refid{{item.id|e}}Label">Delete Category</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">You are about to delete <span class="fw-bolder">({{item.category|e}})</span></div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-outline-danger" name="remove_button" value="{{item.id|e}}">Yes, Delete</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
                   </tr>
                   {% endfor %}
 
