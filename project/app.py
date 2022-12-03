@@ -47,7 +47,7 @@ def index():
     date_y = pd.to_datetime("today").year
     date_m = pd.to_datetime("today").month
     date_d = pd.to_datetime("today").day
-    today = str(date_d) + " " + str(pd.to_datetime("today").strftime('%B')) + " " + str(date_y)
+    today = str(f"{date_d:02}") + " " + str(pd.to_datetime("today").strftime('%B')) + " " + str(date_y)
     
     # retrieve relevant data
     history = db.execute(""" SELECT amount, year, month, day, categories.category
@@ -75,7 +75,7 @@ def index():
     # Create fig1
     xaxis_start = pd.to_datetime(start) - pd.Timedelta(days=1)
     fig1 = px.bar(df, x="date", y="amount", color="category", text_auto=False,
-        color_discrete_sequence=px.colors.qualitative.Safe,
+        color_discrete_sequence=px.colors.qualitative.Safe, template="simple_white",
         labels = dict(date="Date", amount="Money Spent", category="Categories"))
     fig1.update_layout(
         showlegend=False, xaxis_title=None,

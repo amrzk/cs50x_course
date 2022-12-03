@@ -28,7 +28,7 @@
               <form action="/history" method="POST">
               {% for item in history %}
                   <tr>
-                    <td>{{loop.index}}</td>
+                    <th>{{loop.index}}</th>
                     <td>{{item.category|e}}</td>
                     <td>{{item.amount|e}}</td>
                     <td>{{item.year|e}}-{{item.month|e}}-{{item.day|e}}</td>
