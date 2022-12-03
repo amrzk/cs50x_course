@@ -1,20 +1,36 @@
 {% extends "layout.html" %}
 
 {% block title %}
-  Log In
+  Register
 {% endblock %}
 
 {% block main %}
-  <form action="/register" method="post">
-    <div class="mb-3">
-      <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text" required>
+  <div class="container-sm px-4 mt-4">
+    <div class="col-xl-6 offset-lg-3">
+      <!-- Change Register card-->
+      <div class="card mb-4">
+        <div class="card-header">Register</div>
+        <div class="card-body">
+          <form action="/register" method="post">
+            <!-- Form Group (username)-->
+            <div class="mb-3">
+              <label class="small mb-1" for="username">Username</label>
+              <input class="form-control" id="username" name="username" type="text" placeholder="Enter username" required>
+            </div>
+            <!-- Form Group (password)-->
+            <div class="mb-3">
+              <label class="small mb-1" for="password">Password</label>
+              <input class="form-control" id="password" name="password" type="password" placeholder="Enter password" required>
+            </div>
+            <!-- Form Group (confirm password)-->
+            <div class="mb-3">
+              <label class="small mb-1" for="confirmation">Confirm Password</label>
+              <input class="form-control" id="confirmation" name="confirmation" type="password" placeholder="Confirm password" required>
+            </div>
+            <button class="btn btn-primary" type="submit">Register</button>
+          </form>
+        </div>
+      </div>
     </div>
-    <div class="mb-3">
-      <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password" required>
-    </div>
-    <div class="mb-3">
-      <input class="form-control mx-auto w-auto" id="confirmation" name="confirmation" placeholder="Confirm password" type="password" required>
-    </div>
-    <button class="btn btn-primary" type="submit">Register</button>
-  </form>
+  </div>
 {% endblock %}

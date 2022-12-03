@@ -5,13 +5,27 @@
 {% endblock %}
 
 {% block main %}
-  <form action="/login" method="post">
-    <div class="mb-3">
-      <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text" required>
+  <div class="container-sm px-4 mt-4">
+    <div class="col-xl-6 offset-lg-3">
+      <!-- Login card-->
+      <div class="card mb-4">
+        <div class="card-header">Login</div>
+        <div class="card-body">
+          <form action="/login" method="post">
+            <!-- Form Group (username)-->
+            <div class="mb-3">
+              <label class="small mb-1" for="username">Username</label>
+              <input class="form-control" id="username" name="username" type="text" placeholder="Enter username" required>
+            </div>
+            <!-- Form Group (password)-->
+            <div class="mb-3">
+              <label class="small mb-1" for="password">Password</label>
+              <input class="form-control" id="password" name="password" type="password" placeholder="Enter password" required>
+            </div>
+            <button class="btn btn-primary" type="submit">Log In</button>
+          </form>
+        </div>
+      </div>
     </div>
-    <div class="mb-3">
-      <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password" required>
-    </div>
-    <button class="btn btn-primary" type="submit">Log In</button>
-  </form>
+  </div>
 {% endblock %}
