@@ -46,8 +46,10 @@ def index():
     # retrieving user's history
     date_y = pd.to_datetime("today").year
     date_m = pd.to_datetime("today").month
-    # date_d = pd.to_datetime("today").day
-
+    date_d = pd.to_datetime("today").day
+    today = str(date_d) + " " + str(pd.to_datetime("today").strftime('%B')) + " " + str(date_y)
+    
+    # retrieve relevant data
     history = db.execute(""" SELECT amount, year, month, day, categories.category
                 FROM entries LEFT JOIN categories ON category_id = categories.id
                 WHERE year=? AND month=? AND entries.user_id=?""",date_y, date_m, session["user_id"])
@@ -100,7 +102,7 @@ def index():
     plotly.offline.plot(fig1,filename='templates/fig1.html',config=config)
     plotly.offline.plot(fig2,filename='templates/fig2.html',config=config)
 
-    return render_template("index.html", total=total)
+    return render_template("index.html", total=total, today=today)
 
 
 @app.route("/fig1")

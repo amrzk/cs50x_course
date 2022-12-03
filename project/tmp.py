@@ -18,8 +18,9 @@ history = db.execute(""" SELECT amount, description, year, month, day, entries.i
 
 df = pd.DataFrame.from_dict(history)
 df.category.fillna(value='Pickles', inplace=True)
-df = df.to_dict('records')
-
+# df = df.to_dict('records')
+x = pd.to_datetime("today")
+today = pd.to_datetime("today")
 date_y = pd.to_datetime("today").year
 date_m = pd.to_datetime("today").month
 date_d = pd.to_datetime("today").day
@@ -29,10 +30,8 @@ end = pd.Series(pd.date_range(start, freq="M", periods=1))
 
 period = (end[0] - pd.to_datetime(start) + pd.Timedelta(days=1)).days
 
-# print(period)
+print(pd.to_datetime(x, format='%Y%b%d'))
 
-x = "2022-12-06"
-print(pd.to_datetime(x))
 
 # %%
 # import plotly
