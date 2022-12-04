@@ -1,4 +1,3 @@
-import os
 import plotly
 import plotly.express as px
 import pandas as pd
@@ -86,15 +85,16 @@ def index():
     # Create fig2
     fig2 = px.pie(df, values='amount', names='category', color_discrete_sequence=px.colors.qualitative.Safe,
          labels = dict(date="Date", amount="Money Spent", category="Categories"))
-    fig2.update_layout(showlegend=False)
+    fig2.update_layout(showlegend=False, autosize=True, margin=dict(l=1, r=1, t=1, b=1, pad=0),
+        paper_bgcolor="LightSteelBlue",)
     fig2.update_traces(textposition='inside', textinfo='percent+label')
 
     # Plot to html
     config = {'displayModeBar': False, 'staticPlot': False}
-    plotly.offline.plot(fig1,filename='templates/fig1.html',config=config)
-    plotly.offline.plot(fig2,filename='templates/fig2.html',config=config)
+    fig1_plot = plotly.offline.plot(fig1, include_plotlyjs=False, output_type='div', config=config)
+    fig2_plot = plotly.offline.plot(fig2, include_plotlyjs=False, output_type='div', config=config)
 
-    return render_template("index.html", total=total, today=today)
+    return render_template("index.html", total=total, today=today, fig1_plot=fig1_plot, fig2_plot=fig2_plot)
 
 
 @app.route("/fig1")
@@ -117,13 +117,24 @@ def history():
     """Show history of transactions"""
     # User reached route via POST method
     if request.method == "POST":
+        
         # check for remove_button
         if 'remove_button' in request.form:
+            
+            # Ensure id exists and belongs to user_id
             id = request.form['remove_button']
-            db.execute("DELETE FROM entries WHERE user_id=? AND id=?", session["user_id"], id)
+            db_id = db.execute("SELECT * FROM entries WHERE user_id=? AND id=?", session["user_id"], id)
+            if len(db_id) == 0:
+                return apology("item doesn't exist", 400)
+            
+            db.execute("DELETE FROM entries WHERE id=?", id)
+            flash('Item successfully removed')
             return redirect("/history")
-        return apology("entry doesn't exist", 400)
-
+        
+        else:
+            # POST method using an illegal button
+            return apology("illegal entry", 400)
+        
     # User reached route via GET
     else:
         # Look up the user's entries
@@ -132,16 +143,19 @@ def history():
                     WHERE entries.user_id=?""", session["user_id"])
 
         try:
-            history = pd.DataFrame.from_dict(history).sort_values(['day', 'month', 'year', 'amount'], ascending=False)
+            history = pd.DataFrame.from_dict(history)
+            history["date"] = history["year"].astype(str) + "-" + history["month"].astype(str) + "-" + history["day"].astype(str)
+            history["date"] = pd.to_datetime(history["date"])
+            history["date"] = history["date"].dt.strftime('%d/%m/%Y')
+            history = history.drop(columns=['year', 'month', 'day']).sort_values(['date', 'amount'], ascending=False)
+            
+            # Replace NaN(removed categories) for place_holder
+            history.category.fillna(value=place_holder, inplace=True)
         except:
             history = pd.DataFrame.from_dict(history)
-            history['category'] = None
-            
-        # Replace NaN(removed categories) for Pickles
-        history.category.fillna(value=place_holder, inplace=True)
-        history = history.to_dict('records')
-            
 
+    
+        history = history.to_dict('records')
         return render_template("history.html", history=history)
 
 
@@ -210,6 +224,7 @@ def login():
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
+        flash('You were successfully logged in')
 
         # Redirect user to home page
         return redirect("/")
@@ -229,10 +244,10 @@ def logout():
     return redirect("/")
 
 
-@app.route("/personal", methods=["GET", "POST"])
+@app.route("/personalize", methods=["GET", "POST"])
 @login_required
-def personal():
-    """personal page"""
+def personalize():
+    """personalize page"""
     # List all the user's categories
     cat = db.execute("SELECT id, category FROM categories WHERE user_id=?", session["user_id"])
     try:
@@ -246,29 +261,30 @@ def personal():
 
         # check for remove_button
         if 'remove_button' in request.form:
-            id = request.form['remove_button']
             
-            # id not in database
+            # Ensure id exists and belongs to user_id
+            id = request.form['remove_button']
             db_id = db.execute("SELECT * FROM categories WHERE user_id=? AND id=?", session["user_id"], id)
             if len(db_id) == 0:
                 return apology("category doesn't exist", 400)
             
-            db.execute("DELETE FROM categories WHERE user_id=? AND id=?", session["user_id"], id)
-            return redirect("/personal")
+            db.execute("DELETE FROM categories WHERE id=?", id)
+            flash('Category successfully removed')
+            return redirect("/personalize")
 
         # check for add_button
         elif 'add_button' in request.form:
             # Ensure user typed a category
             if not request.form.get("category"):
                 return apology("please add a category", 400)
-            print(request.form.get('category'))
+            
             # Ensure category doesn't already exist
             if request.form.get("category") in cat['category'].unique():
                 return apology("category already exists", 400)
 
             db.execute("INSERT INTO categories (category,user_id) VALUES (?,?)"
                         , request.form.get("category"), session["user_id"])
-            return redirect("/personal")
+            return redirect("/personalize")
 
         else:
             # POST method using an illegal button
@@ -277,7 +293,7 @@ def personal():
     # User reached route via Get method
     else:
         cat = cat.to_dict('records')
-        return render_template("personal.html", cat=cat)
+        return render_template("personalize.html", cat=cat)
 
 
 @app.route("/security", methods=["GET", "POST"])
@@ -302,6 +318,7 @@ def security():
 
         hash = generate_password_hash(request.form.get("newpassword"))
         db.execute("UPDATE users SET hash=? WHERE id=?", hash, session["user_id"])
+        flash('Password changed successfully')
         return redirect("/")
 
     # User reached route via Get method
@@ -349,6 +366,7 @@ def entry():
                     , date.year, date.month, date.day
                     , session["user_id"], cat_id[0]["id"])
 
+        flash('Transaction added successfully')
         return redirect("/")
 
     # User reached route via Get method

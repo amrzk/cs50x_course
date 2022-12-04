@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-  Personal
+  Personalize
 {% endblock %}
 
 {% block main %}
@@ -12,7 +12,7 @@
         <div class="card mb-3 shadow">
           <div class="card-header">Add Category</div>
           <div class="card-body">
-            <form action="/personal" method="post">
+            <form action="/personalize" method="post">
               <!-- Form Group (Category Name)-->
               <div class="mb-3">
                 <label class="small mb-1" for="category">Category Name</label>
@@ -28,7 +28,7 @@
         <div class="card mb-3 shadow">
           <div class="card-header">Categories</div>
           <div class="card-body">
-            <form action="/personal" method="post">
+            <form action="/personalize" method="post">
               <table class="table">
                 <tbody>
 
@@ -47,10 +47,10 @@
                             <h5 class="modal-title" id="#refid{{item.id|e}}Label">Delete Category</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
-                          <div class="modal-body">You are about to delete <span class="fw-bolder">({{item.category|e}})</span></div>
+                          <div class="modal-body">You are about to remove <span class="fw-bolder">({{item.category|e}})</span> fron your list.</div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-outline-danger" name="remove_button" value="{{item.id|e}}">Yes, Delete</button>
+                            <button type="submit" class="btn btn-outline-danger" name="remove_button" value="{{item.id|e}}">Remove</button>
                           </div>
                         </div>
                       </div>

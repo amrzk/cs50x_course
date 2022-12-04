@@ -33,6 +33,16 @@ period = (end[0] - pd.to_datetime(start) + pd.Timedelta(days=1)).days
 print(pd.to_datetime(x, format='%Y%b%d'))
 
 
+plot_ly(data_for_plot, labels = ~cyl, values = ~n, type = 'pie', hole = 0.05 ,textposition = 'outside',textinfo = 'percent') %>%
+  layout(title = list(text = "my nice title is here", xanchor = "center"),
+         showlegend = F,
+         margin = list(l = 20, r = 20),
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE)) %>%
+  layout(paper_bgcolor = "pink")
+  
+  
+  
 # %%
 # import plotly
 # import plotly.graph_objects as go
