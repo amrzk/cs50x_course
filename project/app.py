@@ -77,22 +77,34 @@ def index():
         color_discrete_sequence=px.colors.qualitative.Safe, template="simple_white",
         labels = dict(date="Date", amount="Money Spent", category="Categories"))
     fig1.update_layout(
-        showlegend=False, xaxis_title=None,
+        showlegend=True, xaxis_title=None, margin=dict(l=1, r=1, t=1, b=1, pad=0),
+        legend = dict(orientation="h", yanchor="top", y=1.1, xanchor="left", x=-0.05),
         xaxis = dict(dtick=2*86400000.0, tickmode='linear', ticklabelmode="instant",
         tickformat='%b-%d', tickangle= -45, autorange= False, range=[xaxis_start, end[0]]))
     fig1.update_traces(textangle=0, textposition="outside", cliponaxis=False)
     
     # Create fig2
-    fig2 = px.pie(df, values='amount', names='category', color_discrete_sequence=px.colors.qualitative.Safe,
-         labels = dict(date="Date", amount="Money Spent", category="Categories"))
-    fig2.update_layout(showlegend=False, autosize=True, margin=dict(l=1, r=1, t=1, b=1, pad=0),
-        paper_bgcolor="LightSteelBlue",)
+    fig2 = px.pie(df, values='amount', names='category', hole=.3, 
+        color_discrete_sequence=px.colors.qualitative.Safe,
+        labels = dict(date="Date", amount="Money Spent", category="Categories"))
+    fig2.update_layout(showlegend=False, autosize=True, margin=dict(l=1, r=1, t=1, b=1, pad=0))
     fig2.update_traces(textposition='inside', textinfo='percent+label')
+    
+    # Create fig3
+    # fig3 = px.scatter(df, x="date", y="amount", color="category", size="amount",
+    #     color_discrete_sequence=px.colors.qualitative.Safe, template="simple_white",
+    #     labels = dict(date="Date", amount="Money Spent", category="Categories"))
+    # fig3.update_layout(
+    #     showlegend=False, xaxis_title=None,
+    #     xaxis = dict(dtick=2*86400000.0, tickmode='linear', ticklabelmode="instant",
+    #     tickformat='%b-%d', tickangle= -45, autorange= False, range=[xaxis_start, end[0]]))
+    # fig3.update_traces(textangle=0, textposition="outside", cliponaxis=False)
 
     # Plot to html
     config = {'displayModeBar': False, 'staticPlot': False}
     fig1_plot = plotly.offline.plot(fig1, include_plotlyjs=False, output_type='div', config=config)
     fig2_plot = plotly.offline.plot(fig2, include_plotlyjs=False, output_type='div', config=config)
+    # fig3_plot = plotly.offline.plot(fig3, include_plotlyjs=False, output_type='div', config=config)
 
     return render_template("index.html", total=total, today=today, fig1_plot=fig1_plot, fig2_plot=fig2_plot)
 
