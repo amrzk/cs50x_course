@@ -67,6 +67,7 @@ def index():
     # total (amount)
     total = df["amount"].sum()
 
+
     # Start and end days of the month
     start = str(date_y) + "-" + str(date_m) + "-" + str("01")
     end = pd.Series(pd.date_range(start, freq="M", periods=1))

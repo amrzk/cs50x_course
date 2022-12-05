@@ -4,8 +4,6 @@ CREATE TABLE users (
     hash TEXT NOT NULL
 );
 
--- CREATE TABLE sqlite_sequence(name,seq);
-
 CREATE TABLE categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     category TEXT NOT NULL,
@@ -26,7 +24,7 @@ CREATE TABLE entries (
 );
 
 CREATE UNIQUE INDEX username ON users (username);
-    -- FOREIGN KEY (category_id) REFERENCES categories (id)
+-- FOREIGN KEY (category_id) REFERENCES categories (id)
 -- CREATE UNIQUE INDEX user_id_cat ON categories (user_id);
 -- CREATE UNIQUE INDEX user_id_ent ON entries (user_id);
 
