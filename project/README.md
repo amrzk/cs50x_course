@@ -1,9 +1,9 @@
-# <img src="/static/favicon.ico" alt="drawing" width="7.5%"/> C$50 Expense - CS50X Final Project 2022
+# <img src="static/favicon.ico" alt="drawing" width="4%"/> C$50 Expense - CS50X Final Project 2022
 C$50 Expense is a web-based application that enables the user to log their daily expenses and neatly plot some graphs for the user to monitor their spending.
 
 [See it in action.](https://www.google.com)
 
-### The Main Features of C$50 Expense:
+# The Main Features of C$50 Expense:
 
 ## Personalized:
 This feature allows the user to create their own unique categories to represent their purchase. It also gives the user the ability to remove unwanted categories.
@@ -28,7 +28,7 @@ C$50 Expense is a python written app, supported by sqlite3 database, and using f
 ### Main Files:
 - app.py file contains majority of the code and is responsible for relaying the data sent by the user to the database or back to the user after a series of guard clauses.
 
-- helpers.py file contains a couple of helper functions that are called in the app.py file which helps keeping the main (app,py) file clean and neat.
+- helpers.py file contains a couple of helper functions that are called in the app.py file which helps keeping the main (app.py) file clean and neat.
 
 # Struggles And Design Choices:
 ### Choices:
@@ -39,11 +39,11 @@ C$50 Expense is a python written app, supported by sqlite3 database, and using f
 
 - Pandas library for python was picked to easly manipulate the user's data outputted form SQL and eventually using these dataframes anlong side the plotly library to get the desired graphs.  
 
-- Plotly Offline Plot was used to create the < div > part of the graphs which ar then relaid to the html through jinja code.
+- Plotly Offline Plot was used to create the `<div>` part of the graphs which ar then relaid to the html through jinja code.
 
 ### Struggles:
 - Allowing the user to remove a category was a difficult choice to make because there is always the problem of the entries using that category, henceforth the following was decided:
-    + The category_id column in entries table will not be a (FOREIGN KEY) to allow the user to remove a category without having to remove all related entries to that category.
+    + The category_id column in entries table will not be a `FOREIGN KEY` to allow the user to remove a category without having to remove all related entries to that category.
     + All (NaN) category names will be represented by a generic category name to represent all the entries that had their category removed.
 
 # Future Development:
