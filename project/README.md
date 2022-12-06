@@ -3,9 +3,9 @@ C$50 Expense is a web-based application that enables the user to log their daily
 
 [See it in action.](https://www.google.com)
 
-### The Main Sections of The Webapp:
+### The Main Features of C$50 Expense:
 
-## Personalize:
+## Personalized:
 This feature allows the user to create their own unique categories to represent their purchase. It also gives the user the ability to remove unwanted categories.
 
 ## Adding A New Transaction:
