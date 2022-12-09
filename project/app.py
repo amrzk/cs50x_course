@@ -5,7 +5,9 @@ import pandas as pd
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
+from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
+# from datetime import datetime
 
 from helpers import apology, login_required
 
@@ -89,10 +91,21 @@ def index():
     fig2.update_layout(showlegend=False, autosize=True, margin=dict(l=1, r=1, t=1, b=1, pad=0))
     fig2.update_traces(textposition='inside', textinfo='percent+label')
     
+    # Create fig3
+    # fig3 = px.scatter(df, x="date", y="amount", color="category", size="amount",
+    #     color_discrete_sequence=px.colors.qualitative.Safe, template="simple_white",
+    #     labels = dict(date="Date", amount="Money Spent", category="Categories"))
+    # fig3.update_layout(
+    #     showlegend=False, xaxis_title=None,
+    #     xaxis = dict(dtick=2*86400000.0, tickmode='linear', ticklabelmode="instant",
+    #     tickformat='%b-%d', tickangle= -45, autorange= False, range=[xaxis_start, end[0]]))
+    # fig3.update_traces(textangle=0, textposition="outside", cliponaxis=False)
+
     # Plot to html
     config = {'displayModeBar': False, 'staticPlot': False}
     fig1_plot = plotly.offline.plot(fig1, include_plotlyjs=False, output_type='div', config=config)
     fig2_plot = plotly.offline.plot(fig2, include_plotlyjs=False, output_type='div', config=config)
+    # fig3_plot = plotly.offline.plot(fig3, include_plotlyjs=False, output_type='div', config=config)
 
     return render_template("index.html", total=total, today=today, fig1_plot=fig1_plot, fig2_plot=fig2_plot)
 
@@ -170,11 +183,11 @@ def register():
             return apology("must provide username", 400)
 
         # Ensure password was submitted
-        if not request.form.get("password"):
+        elif not request.form.get("password"):
             return apology("must provide password", 400)
 
         # Ensure password and confirmation match
-        if request.form.get("confirmation") != request.form.get("password"):
+        elif request.form.get("confirmation") != request.form.get("password"):
             return apology("password and confirmation doesn't match", 400)
 
         # Check if username already exists
@@ -212,7 +225,7 @@ def login():
             return apology("must provide username", 403)
 
         # Ensure password was submitted
-        if not request.form.get("password"):
+        elif not request.form.get("password"):
             return apology("must provide password", 403)
 
         # Query database for username
@@ -309,11 +322,11 @@ def security():
             return apology("incorrect password", 400)
 
         # Ensure password was submitted
-        if not request.form.get("newpassword"):
+        elif not request.form.get("newpassword"):
             return apology("must provide a new password", 400)
 
         # Ensure password and confirmation match
-        if request.form.get("confirmpassword") != request.form.get("newpassword"):
+        elif request.form.get("confirmpassword") != request.form.get("newpassword"):
             return apology("new passwords doesn't match", 400)
 
         hash = generate_password_hash(request.form.get("newpassword"))

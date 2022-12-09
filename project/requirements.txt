@@ -1,7 +1,9 @@
 cs50
-flask
-flask-Session
-functools
+Flask
+Flask-Session
+requests
+datetime
+gunicorn
+psycopg2
 pandas
 plotly
-werkzeug.securit
