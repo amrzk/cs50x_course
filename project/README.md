@@ -1,7 +1,7 @@
 # <img src="static/favicon.ico" alt="drawing" width="4%"/> C$50 Expense - CS50X Final Project 2022
 C$50 Expense is a web-based application that enable users to log their daily expenses and neatly plot some graphs for the user to monitor their spending.
 
-[See it in action.](https://www.google.com)
+[See it in action.](https://youtu.be/VpE-BS04N6w)
 
 # The Main Features of C$50 Expense:
 
