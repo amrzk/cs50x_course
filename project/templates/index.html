@@ -8,16 +8,18 @@
   <div class="container-sm px-4 mt-4">
     <div class="row">
       <div class="col-xl-3">
-        <!-- Add Date card-->
-        <div class="card mb-5 shadow">
-          <div class="card-header">Date</div>
-          <div class="card-body">
-            <!-- Form Group (Date)-->
-            <div class="mb-3">
-              <h3>{{today}}</h3>
+        {% if total != 0 %}
+          <!-- Add Date card-->
+          <div class="card mb-5 shadow">
+            <div class="card-header">Date</div>
+            <div class="card-body">
+              <!-- Form Group (Date)-->
+              <div class="mb-3">
+                <h3>{{today}}</h3>
+              </div>
             </div>
           </div>
-        </div>
+        {% endif %}
 
         <!-- Add Total card-->
         <div class="card mb-5 shadow">
@@ -30,7 +32,19 @@
           </div>
         </div>
 
-
+        {% if total == 0 %}
+        <!-- Add pie graph card-->
+        <div class="card mb-5 shadow">
+          <div class="card-header">Monthly Breakdown</div>
+          <div class="card-body">
+            <!-- Form Group (Pie graph)-->
+            <div class="mb-3">
+            <!-- Add a place holder for the beginning of the month -->
+            <p>No data to display</p>
+            </div>
+          </div>
+        </div>
+        {% else %}
         <!-- Add pie graph card-->
         <div class="card mb-5 shadow">
           <div class="card-header">Monthly Breakdown</div>
@@ -43,7 +57,7 @@
             </div>
           </div>
         </div>
-
+        {% endif %}
 
       </div>
 
