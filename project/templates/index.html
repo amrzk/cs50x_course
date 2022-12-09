@@ -12,7 +12,7 @@
         <div class="card mb-5 shadow">
           <div class="card-header">Date</div>
           <div class="card-body">
-            <!-- Form Group (Expenses Summary)-->
+            <!-- Form Group (Date)-->
             <div class="mb-3">
               <h3>{{today}}</h3>
             </div>
@@ -23,7 +23,7 @@
         <div class="card mb-5 shadow">
           <div class="card-header">Monthly Expense</div>
           <div class="card-body">
-            <!-- Form Group (Total Expenses Name)-->
+            <!-- Form Group (Total)-->
             <div class="mb-3">
               <h1>{{total}}</h1>
             </div>
@@ -31,11 +31,11 @@
         </div>
 
 
-        <!-- Add Total card-->
+        <!-- Add pie graph card-->
         <div class="card mb-5 shadow">
           <div class="card-header">Monthly Breakdown</div>
           <div class="card-body">
-            <!-- Form Group (Total Breakdown Name)-->
+            <!-- Form Group (Pie graph)-->
             <div class="mb-3">
               <div class="ratio ratio-1x1">
                 {{fig2_plot|safe}}
@@ -55,7 +55,7 @@
           <div class="card-header">Monthly Graph</div>
           <div class="card-body">
             <!-- Add a place holder for the beginning of the month -->
-            <p>No data</p>
+            <p>No data to display</p>
           </div>
         </div>
       </div>
@@ -66,25 +66,6 @@
         <div class="card mb-3 shadow">
           <div class="card-header">Monthly Graph</div>
           <div class="card-body">
-            <!-- Plot selector -->
-            <!--
-              <nav>
-                <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                  <button class="nav-link active " id="nav-bar-tab" data-bs-toggle="tab" data-bs-target="#nav-bar" type="button" role="tab" aria-controls="nav-bar" aria-selected="true">Bar</button>
-                  <button class="nav-link" id="nav-pie-tab" data-bs-toggle="tab" data-bs-target="#nav-pie" type="button" role="tab" aria-controls="nav-pie" aria-selected="false">Pie</button>
-                </div>
-              </nav>
-              
-              <div class="tab-content ratio ratio-16x9" id="nav-tabContent">
-  
-                <div class="tab-pane fade" id="nav-bar" role="tabpanel" aria-labelledby="nav-bar-tab">
-                    {{fig1_plot|safe}}
-                </div>
-                <div class="tab-pane fade show active" id="nav-pie" role="tabpanel" aria-labelledby="nav-pie-tab">
-                    
-                </div>
-              </div>
-            -->
             <div class="ratio ratio-4x3">
               {{fig1_plot|safe}}
             </div>
